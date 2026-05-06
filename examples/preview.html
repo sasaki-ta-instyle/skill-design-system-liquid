@@ -11,9 +11,7 @@
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="ig_ogp_2026-100.jpg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700&family=Noto+Sans+JP:wght@400;500;700&family=Shippori+Mincho:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@0.1.2/all.css">
   <style>
     :root {
       /* instyle.group palette */
@@ -60,8 +58,8 @@
       --corner-shape-soft: superellipse(2);
       --corner-shape-hard: superellipse(3.5);
 
-      --font-sans: 'Lato', 'Noto Sans JP', sans-serif;
-      --font-serif: 'Shippori Mincho', serif;
+      --font-sans:    'Gen Interface JP', sans-serif;
+      --font-display: 'Gen Interface JP Display', 'Gen Interface JP', sans-serif;
       --ease-out: 250ms cubic-bezier(.4,0,.2,1);
       --ease-spring: 380ms cubic-bezier(.34,1.56,.64,1);
     }
@@ -79,6 +77,8 @@
       -webkit-font-smoothing: antialiased;
       min-height: 100vh;
     }
+
+    h1, h2, h3, h4 { font-family: var(--font-display); }
 
     /* ── Fixed ambient background ── */
     .scene-bg {
@@ -799,7 +799,7 @@
 
   <!-- ═══ TYPOGRAPHY ═══ -->
   <section class="section glass-panel" id="typography">
-    <p class="section-title">Typography — Lato + Noto Sans JP / Modular Scale 1.333</p>
+    <p class="section-title">Typography — Gen Interface JP (Display) / Modular Scale 1.333</p>
     <p style="font-size:.8125rem; color:var(--color-text-muted); margin-bottom:24px;">モジュラースケール Perfect Fourth 1.333 / base 14px: 8 / 11 / 14 / 19 / 25 / 33 / 44 / 59 px</p>
 
     <div class="type-row">
@@ -837,10 +837,6 @@
     <div class="type-row">
       <span class="type-label">Mark<br><strong style="color:var(--color-text-light);">本文内</strong><br><span style="color:var(--color-text-muted); font-weight:400;">蛍光ペン</span></span>
       <span class="type-body">本文の中で <mark>立たせたい語句</mark> をポイント的にマーキングする用途のみ。CTA や面要素には使わない。</span>
-    </div>
-    <div class="type-row">
-      <span class="type-label">Serif<br><strong style="color:var(--color-text-light);">11px</strong><br><span style="color:var(--color-text-muted); font-weight:400;">明示指示時のみ</span></span>
-      <span style="font-family:var(--font-serif); font-size:.6875rem; font-weight:700;">明朝体オプション — Shippori Mincho（既定では使用しない）</span>
     </div>
   </section>
 

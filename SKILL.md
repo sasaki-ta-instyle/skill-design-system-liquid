@@ -38,14 +38,14 @@ it, glass panels look dead. The class is defined in `rules/snippets.css`.
 
 ### 3. Typography
 
-- `--font-sans: 'Lato', 'Noto Sans JP', sans-serif` — Lato for Latin, Noto
-  Sans JP for Japanese, in that order.
+- `--font-sans: 'Gen Interface JP', sans-serif` for body text and
+  `--font-display: 'Gen Interface JP Display', 'Gen Interface JP', sans-serif`
+  for headings (h1–h4). Gen Interface JP handles both Latin and Japanese.
 - Modular type scale **Perfect Fourth (1.333) on a 14px base** (Display 59 /
   H1 44 / H2 33 / H3 25 / H4 19 / Body 14 / Small 11 / Caption 8).
 - Min font-size 11px. Caption 8px is for chart axis labels only.
-- Serif (`Shippori Mincho`) is **opt-in only**. Do not use it unless the user
-  explicitly says "明朝" / "serif" / "editorial". For eyebrow labels, step
-  numbers and small caps, use the tracked-sans `.eyebrow` style instead.
+- **Do not use serif / Mincho.** For eyebrow labels, step numbers and small
+  caps, use the tracked-sans `.eyebrow` style instead.
 
 ### 4. Borders / dividers
 
@@ -107,11 +107,10 @@ washes. 2–3 uses per page maximum.
 2. Copy `rules/tokens.css` and `rules/snippets.css` into the project's
    stylesheet folder, import them before any component CSS.
 3. Add `<div class="scene-bg"></div>` as the first child of `<body>`.
-4. Load Google Fonts in `<head>`:
+4. Load the font in `<head>` (Gen Interface JP ships body + Display in
+   one stylesheet):
    ```html
-   <link rel="preconnect" href="https://fonts.googleapis.com">
-   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700&family=Noto+Sans+JP:wght@400;500;700&family=Shippori+Mincho:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@0.1.2/all.css">
    ```
 5. Drop in the brand favicon/logo from `assets/` if the project carries the
    instyle.group identity.
@@ -137,7 +136,7 @@ when you need:
 - ❌ Using `border: 1px solid var(--color-border)` style hairlines
 - ❌ Filling panels or CTAs with `#E2DD2A`
 - ❌ Stacking 4+ glass materials on one screen
-- ❌ Using Shippori Mincho without explicit user opt-in
+- ❌ Using serif / Mincho fonts (the system is sans-only)
 - ❌ Hardcoding hex colors instead of tokens
 - ❌ Round-arc `border-radius` only — must pair with `corner-shape`
 

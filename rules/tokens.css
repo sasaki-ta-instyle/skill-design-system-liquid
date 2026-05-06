@@ -61,8 +61,8 @@
   --corner-shape-hard: superellipse(3.5);  /* squarer, for large panels */
 
   /* ── Typography & motion ──────────────────────────── */
-  --font-sans:  'Lato', 'Noto Sans JP', sans-serif;
-  --font-serif: 'Shippori Mincho', serif;  /* opt-in only */
+  --font-sans:    'Gen Interface JP', sans-serif;
+  --font-display: 'Gen Interface JP Display', 'Gen Interface JP', sans-serif;  /* headings (h1–h4) */
 
   --ease-out:    250ms cubic-bezier(.4, 0, .2, 1);
   --ease-spring: 380ms cubic-bezier(.34, 1.56, .64, 1);
@@ -71,6 +71,9 @@
 /* Apply continuous-curvature corner shape to all elements.
    Browsers without `corner-shape` support fall back to standard border-radius. */
 * { corner-shape: var(--corner-shape); }
+
+/* Headings use the Display variant. */
+h1, h2, h3, h4 { font-family: var(--font-display); }
 
 /* Larger panels look more iOS-like with the harder superellipse. */
 .glass-panel,
