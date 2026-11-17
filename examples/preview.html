@@ -11,7 +11,12 @@
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="ig_ogp_2026-100.jpg">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@0.1.2/all.css">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@0.5.0/all.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Shippori Mincho はオプトイン例の表示用に preview.html だけは読み込んでいる（プロダクション側は不要時に外す） -->
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Shippori+Mincho:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       /* instyle.group palette */
@@ -60,6 +65,8 @@
 
       --font-sans:    'Gen Interface JP', sans-serif;
       --font-display: 'Gen Interface JP Display', 'Gen Interface JP', sans-serif;
+      --font-serif:   'Shippori Mincho', serif;  /* オプトイン参考表示用 */
+      --font-mono:    'JetBrains Mono', 'Menlo', monospace;
       --ease-out: 250ms cubic-bezier(.4,0,.2,1);
       --ease-spring: 380ms cubic-bezier(.34,1.56,.64,1);
     }
@@ -77,8 +84,6 @@
       -webkit-font-smoothing: antialiased;
       min-height: 100vh;
     }
-
-    h1, h2, h3, h4 { font-family: var(--font-display); }
 
     /* ── Fixed ambient background ── */
     .scene-bg {
@@ -382,16 +387,16 @@
       border-radius: var(--r-pill);
       font-size: .75rem;
       font-weight: 500;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
       border: 1px solid transparent;
     }
-    .badge-default { background:rgba(196,193,176,.38); color:var(--color-text-muted); border-color:rgba(255,255,255,.58); }
-    .badge-success { background:rgba(22,163,74,.14);   color:#15803D; border-color:rgba(22,163,74,.24); }
-    .badge-warning { background:rgba(217,119,6,.14);   color:#B45309; border-color:rgba(217,119,6,.24); }
-    .badge-error   { background:rgba(198,41,44,.12);   color:#B91C1C; border-color:rgba(198,41,44,.22); }
-    .badge-info    { background:rgba(37,99,235,.12);   color:#1D4ED8; border-color:rgba(37,99,235,.22); }
-    .badge-accent  { background:rgba(130,131,122,.28); color:var(--color-text); border-color:rgba(255,255,255,.52); }
+    .badge-default { background:#E1DDD0; color:var(--color-text-muted); border-color:#B5AE96; }
+    .badge-success { background:#D8E5DC; color:#15803D; border-color:#9FB9AB; }
+    .badge-warning { background:#EDDDC8; color:#B45309; border-color:#C9AD92; }
+    .badge-error   { background:#E8D8DA; color:#B91C1C; border-color:#C2A1A3; }
+    .badge-info    { background:#DBDFEA; color:#1D4ED8; border-color:#A8B0C2; }
+    .badge-accent  { background:#D2D2CE; color:var(--color-text); border-color:#A6A59A; }
 
     /* ── TABLE ── */
     .table-wrap {
@@ -799,7 +804,7 @@
 
   <!-- ═══ TYPOGRAPHY ═══ -->
   <section class="section glass-panel" id="typography">
-    <p class="section-title">Typography — Gen Interface JP (Display) / Modular Scale 1.333</p>
+    <p class="section-title">Typography — Gen Interface JP / Modular Scale 1.333</p>
     <p style="font-size:.8125rem; color:var(--color-text-muted); margin-bottom:24px;">モジュラースケール Perfect Fourth 1.333 / base 14px: 8 / 11 / 14 / 19 / 25 / 33 / 44 / 59 px</p>
 
     <div class="type-row">
@@ -837,6 +842,10 @@
     <div class="type-row">
       <span class="type-label">Mark<br><strong style="color:var(--color-text-light);">本文内</strong><br><span style="color:var(--color-text-muted); font-weight:400;">蛍光ペン</span></span>
       <span class="type-body">本文の中で <mark>立たせたい語句</mark> をポイント的にマーキングする用途のみ。CTA や面要素には使わない。</span>
+    </div>
+    <div class="type-row">
+      <span class="type-label">Serif<br><strong style="color:var(--color-text-light);">11px</strong><br><span style="color:var(--color-text-muted); font-weight:400;">明示指示時のみ</span></span>
+      <span style="font-family:var(--font-serif); font-size:.6875rem; font-weight:700;">明朝体オプション — Shippori Mincho（既定では使用しない）</span>
     </div>
   </section>
 

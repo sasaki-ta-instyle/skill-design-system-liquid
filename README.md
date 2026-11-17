@@ -19,7 +19,11 @@ materials, backdrop-filter blur, specular highlights, and an ambient scene-bg.
   on demand when deeper detail is needed.
 - **Project bootstrap template**: `rules/claude-md-template.md` is a starting
   `CLAUDE.md` for new projects that adopt this system.
-- **Brand assets**: logo / favicon / OGP image included in `assets/`.
+- **Brand assets**: logo / favicon / OGP image included in `assets/` as
+  **reference copies for offline preview only**. Production projects must
+  reference the canonical URL
+  `https://<CATEGORY>.instyle.group/_shared/static/{favicon.png,logo.svg,ogp.jpg}`
+  instead of bundling — see `SKILL.md` step 5.
 - **Live preview**: open `examples/preview.html` in a browser to see what the
   target looks like.
 

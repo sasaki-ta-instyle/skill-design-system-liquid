@@ -2,7 +2,7 @@
 
 instyle.group の "Liquid Glass" 系デザインガイド。ベースの instyle.group ブランド（warm neutral）を保ちつつ、半透明・blur・スペキュラハイライトで奥行きと光沢を表現する。
 
-> このドキュメントは **liquid 系プロジェクト専用**。フラット版は `../design-system/design.md` を参照。
+> このドキュメントは **liquid 系プロジェクト専用**。フラット版は `../design-system/design-system_flat/design.md` を参照。
 
 ---
 
@@ -128,6 +128,40 @@ mark, .mark {
 .page-header, .nav-wrap, .container, footer { position: relative; z-index: 1; }
 ```
 
+#### Next.js の 404 / エラー画面（必須）
+
+Next.js 標準の 404 画面とエラー画面は `position` を持たないため、固定配置の `.scene-bg`（`z-index: 0`）の下に描画されて**真っ白に見える**。Next.js で使うときは `app/not-found.tsx` と `app/error.tsx` を必ず用意し、ルート要素を `.container`（`position: relative; z-index: 1`）で包む。期限切れ URL・打ち間違い・サーバ例外のどれでも、利用者に案内と戻り先が見える状態を保つため。
+
+```tsx
+// app/not-found.tsx
+import Link from "next/link";
+
+export default function NotFound() {
+  return (
+    <main className="container">
+      <h1>ページが見つかりません</h1>
+      <p>URL が変わったか、公開が終了した可能性があります。</p>
+      <Link href="/">トップへ戻る</Link>
+    </main>
+  );
+}
+```
+
+```tsx
+// app/error.tsx
+"use client";
+
+export default function ErrorPage({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  return (
+    <main className="container">
+      <h1>画面を表示できませんでした</h1>
+      <p>時間をおいて、もう一度お試しください。</p>
+      <button type="button" onClick={() => reset()}>再読み込み</button>
+    </main>
+  );
+}
+```
+
 ### チャート用カラーシーケンス
 
 | 順序 | HEX | 用途 |
@@ -146,22 +180,35 @@ mark, .mark {
 
 ### フォントファミリー
 
+UI / 本文は **Gen Interface JP**、見出しは **Gen Interface JP Display** を使う。和文・欧文を 1 ファミリで賄うため、従来の `Lato + Noto Sans JP` 構成は廃止した。Liquid Glass の繊細なエッジや光沢演出と Gen Interface JP の落ち着いた字面が相性がよい。明朝（Shippori Mincho）は**オプトイン**で、glass パネル内の本文段落で明示指示があったときのみ別途読み込む。
+
+使用可能ウェイトは Thin (100) / ExtraLight (200) / Light (300) / Regular (400) / Medium (500) / SemiBold (600) / Bold (700) / ExtraBold (800) の **8 段階**。`Gen Interface JP` / `Gen Interface JP Display` どちらも同じ 8 weights を `all.css` 一括で読み込む。
+
+> このテンプレでは採用者がウェイト選定で迷わないよう、`all.css`（16 styles を 1 リクエストで配信）を既定とする。プロダクション最適化が必要になったら、公式 README の per-weight CSS（例：`cdn/400.css`、`cdn/display-700.css`）に切り替えると転送量を削減できる。
+
 ```html
-<!-- Gen Interface JP（本文 + Display を一括配信） -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@0.1.2/all.css">
+<!-- HTML head -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@0.5.0/all.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 ```
 
 ```css
 :root {
   --font-sans:    'Gen Interface JP', sans-serif;
-  --font-display: 'Gen Interface JP Display', 'Gen Interface JP', sans-serif;  /* 見出し（h1〜h4）に当てる */
+  --font-display: 'Gen Interface JP Display', 'Gen Interface JP', sans-serif;
+  --font-mono:    'JetBrains Mono', 'Menlo', monospace;
+  /* --font-serif: 'Shippori Mincho', serif;
+     オプトイン時のみ <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&display=swap"> を head に追加してから利用 */
 }
 
-/* 見出しは Display を当てる（base スタイル） */
+/* 見出しは Display を当てる */
 h1, h2, h3, h4 { font-family: var(--font-display); }
 ```
 
-> **明朝体は使わない**。eyebrow / 見出し / TOC タイトル / ステップ番号 / フッタータグなどには **tracked sans**（`font-size: 0.625rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em;`）を使う。
+> **明朝体（`--font-serif`）の運用ルール**: 標準では使わない（CDN にも含めない）。eyebrow / 見出し / TOC タイトル / ステップ番号 / フッタータグなどに **自動で serif italic を当てない**。ユーザーから「明朝で」「serif で」「エディトリアルっぽく」と明示指示があった時のみ Shippori Mincho を別途 Google Fonts から読み込み、`var(--font-serif)` を有効化する。代替の eyebrow パターンは `font-size: 0.625rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em;` の **tracked sans**。
 
 ### タイプスケール（モジュラースケール / Perfect Fourth 1.333・base 14px）
 
@@ -381,6 +428,33 @@ h1, h2, h3, h4 { font-family: var(--font-display); }
 .btn-lg { padding: 14px 30px; font-size: 1rem; }
 ```
 
+### テキストリンク
+
+本文中（段落・リスト・テーブルセル）の `<a>` には**下線を引く**。CTA ボタン（`.btn`）やカード型リンク（`.card`）、Pill Nav は下線なしのまま、glass パネル内の本文テキストに混じる外部 URL や内部参照だけ視覚的に区別する。
+
+| プロパティ | 値 | 理由 |
+|---|---|---|
+| `text-decoration` | `underline` | リンクであることを明示 |
+| `text-decoration-color` | `var(--color-text-muted)` | glass の半透明背景と相性が良い控えめな線色 |
+| `text-decoration-thickness` | `1px` | Liquid 全体の繊細なエッジ表現と調和 |
+| `text-underline-offset` | `0.22em` | 日本語のディセンダーと衝突しない余白 |
+| hover 時 | 線色 → `var(--color-text)` / 太さ → `1.5px` | わずかに強調 |
+
+```css
+:where(p, li, td) a:not(.btn):not(.card) {
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--color-text-muted);
+}
+:where(p, li, td) a:not(.btn):not(.card):hover {
+  text-decoration-color: var(--color-text);
+  text-decoration-thickness: 1.5px;
+}
+```
+
+> Floating Pill Nav やヒーロー CTA、glass card など**コンポーネント自体がクリック可能領域を持つ**ものは下線対象外。下線は **glass パネル内の本文インラインリンク専用**として運用する。
+
 ### Floating Pill Nav
 
 ナビゲーションは「ページ上部に浮いている薬カプセル状のガラス」として実装する。
@@ -432,15 +506,18 @@ h1, h2, h3, h4 { font-family: var(--font-display); }
   border-radius: var(--r-pill);
   font-size: .75rem;
   font-weight: 500;
-  backdrop-filter: blur(8px);
+  backdrop-filter: none; /* badge は不透明・ガラス効果は乗せない（下地依存を避ける） */
   border: 1px solid transparent;
 }
-.badge-default { background: rgba(196,193,176,.38); color: var(--color-text-muted); border-color: rgba(255,255,255,.58); }
-.badge-success { background: rgba( 22,163, 74,.14); color: #15803D; border-color: rgba(22,163,74,.24); }
-.badge-warning { background: rgba(217,119,  6,.14); color: #B45309; border-color: rgba(217,119,6,.24); }
-.badge-error   { background: rgba(198, 41, 44,.12); color: #B91C1C; border-color: rgba(198,41,44,.22); }
-.badge-info    { background: rgba( 37, 99,235,.12); color: #1D4ED8; border-color: rgba(37,99,235,.22); }
-.badge-accent  { background: rgba(130,131,122,.28); color: var(--color-text); border-color: rgba(255,255,255,.52); }
+/* 不透明ベタ色で塗る。下地（ガラス面 / scene-bg）の明度に左右されない統一見え。
+   warm beige の bg #ede9e0 上で「ガラス越し」に見えないよう、明度を一段下げ、
+   border は bg からさらに一段濃く（区切りを明示）。色相は維持。 */
+.badge-default { background: #E1DDD0; color: var(--color-text-muted); border-color: #B5AE96; }
+.badge-success { background: #D8E5DC; color: #15803D;                  border-color: #9FB9AB; }
+.badge-warning { background: #EDDDC8; color: #B45309;                  border-color: #C9AD92; }
+.badge-error   { background: #E8D8DA; color: #B91C1C;                  border-color: #C2A1A3; }
+.badge-info    { background: #DBDFEA; color: #1D4ED8;                  border-color: #A8B0C2; }
+.badge-accent  { background: #D2D2CE; color: var(--color-text);        border-color: #A6A59A; }
 ```
 
 ### テーブル
@@ -495,6 +572,25 @@ tr:not(:last-child) td { border-bottom: 1px solid rgba(255,255,255,.42); }
 }
 .input::placeholder { color: var(--color-text-light); }
 ```
+
+### ロゴ / ブランド表記（INSTYLE GROUP）
+
+ヘッダー・フッター等で「INSTYLE GROUP」を出す場合は **テキスト表記ではなくロゴ（`ig_logo_2026.svg`）を優先**する。社内向けが主目的の制作物が大半なので、ロゴは**主張させずに小さめ**に配置する。
+
+**ルール**
+- 表示は `ig_logo_2026.svg` をそのまま `<img>` で配置（色変更しない）
+- 推奨サイズ: `height: 14px`（基準）／ 最大でも `height: 18px`
+- Liquid のヘッダーは glass パネル上に乗ることが多いが、ロゴは glass トークンを被せず固定色のまま置く（パネルが半透明なので背景に紛れず読める）
+- 同じ画面内に他のロゴと並べる場合も 14〜18px の帯に収める
+- どうしてもテキスト表記が必要な場合（メール本文／プレーンテキスト埋め込み等）のみ「INSTYLE GROUP」と書く
+
+```html
+<a href="https://instyle.group" aria-label="INSTYLE GROUP">
+  <img src="/_shared/static/logo.svg" alt="INSTYLE GROUP" style="height: 14px; display: block;">
+</a>
+```
+
+> 使ってはいけない例: ヒーローの中央に大きく置く、見出し代わりに 32px 以上で配置、glass の発光やシャドウをロゴ全体に被せる、accent カラーで塗りつぶす。
 
 ---
 
@@ -743,3 +839,89 @@ project/
 ---
 
 *最終更新: 2026-04-30 | instyle.group Creative Team — Liquid Glass Edition*
+
+---
+
+## 日本語改行 — BudouX（workspace 標準）
+
+日本語テキストが単語や句節の途中で不自然に改行しないよう、**BudouX**（Google 製の意味区切りライブラリ）を workspace 全体の既定として採用する。BudouX が意味の切れ目に `<wbr>` を挿入し、CSS 側で `word-break: keep-all` を設定することで、「BudouX が入れた位置以外では改行しない」動作にする。
+
+> **新規プロジェクトの既定**。プレゼン / LP / 記事 / メニュー / 案内など、日本語文が長めの公開ページで特に効果が大きい。オプトアウトは可（社内 ad-hoc スクリプト等では省略してよい）。
+
+### 1. HTML `<head>` に追加
+
+```html
+<script type="module">
+  import { loadDefaultJapaneseParser } from 'https://esm.sh/budoux@0.7.0';
+  const parser = loadDefaultJapaneseParser();
+  const SELECTORS = 'h1, h2, h3, h4, p, li, td, th, .callout, .lede, blockquote';
+  const apply = () => {
+    document.querySelectorAll(SELECTORS).forEach(el => {
+      if (el.dataset.budoux === '1') return;
+      try {
+        el.innerHTML = parser.translateHTMLString(el.innerHTML);
+        el.dataset.budoux = '1';
+      } catch (_) {}
+    });
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', apply);
+  } else {
+    apply();
+  }
+</script>
+```
+
+React / Next.js の場合は `useEffect` 内で同じロジックを実行するか、`budoux-react`（`npm i budoux`）の React コンポーネントを使う。
+
+### 2. CSS で改行制御
+
+```css
+:where(h1, h2, h3, h4, p, li, td, th, .callout, .lede, blockquote) {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  line-break: strict;
+}
+```
+
+`:where()` で詳細度をゼロにしているので、既存の word-break 指定を上書きしない。優先させたい場合は `:where()` を外す。
+
+### DO / DON'T
+
+- **DO**: プレゼン / LP / 記事 / メニュー / 案内など日本語文が長めの領域に標準で入れる
+- **DO**: SELECTORS はプロジェクトごとに絞り込む（表全部 vs 見出しだけ 等）
+- **DON'T**: `code`, `pre`, `.mono` などモノスペース領域には適用しない
+- **DON'T**: 短いラベル・ボタン・数値バッジには不要（`<wbr>` を入れても意味がない）
+- **DON'T**: BudouX が挿入する `<wbr>` は文中に見えないが、コピペ時にブラウザによって空白として扱われることがある点は留意（実運用上ほぼ問題なし）
+
+### なぜ BudouX か
+
+- CSS `word-break: auto-phrase`（CSS Text 4）が同等効果を狙うが 2026-07 時点で Chrome のみ対応。**BudouX は JS ライブラリなので全ブラウザで動く**
+- CDN（esm.sh）経由で読み込むだけなのでビルド追加なし
+- LSTM ベースの日本語構文解析器。専門用語や新語にもある程度対応する
+- 公式：https://github.com/google/budoux
+
+
+## アイコン・ピクトグラム — Phosphor Icons（workspace 標準）
+
+**アイコン・ピクトグラムは [Phosphor Icons](https://phosphoricons.com/) を単一リファレンス正本とする。**
+
+要点:
+- 既定ウェイトは **regular**。強調 / 小サイズ (<20px) は **bold**。1 プロジェクトに 1 ウェイトが基本
+- サイズは **8 の倍数**（16 / 20 / 24 / 32 / 48 / 64 / 96）
+- 色は `currentColor` を使って CSS 側の `color` に委任（SVG の `fill` 直書き禁止）
+- Phosphor viewBox は `0 0 256 256`。コピペ時は `fill="currentColor"` を忘れずに
+- 単一 HTML（スライド / 見積もり / 1 枚レポート）は**インライン SVG**、Next.js アプリは `@phosphor-icons/react`、大量使用 Web は CDN webfont `https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css`
+
+### DO / DON'T
+
+**DO**
+- 迷ったら phosphoricons.com で検索して SVG コピー
+- 1 プロジェクト 1 ウェイト（regular または bold のどちらか）に統一
+- サイズ・色・ホバー状態は CSS で制御
+
+**DON'T**
+- 自作 SVG で場当たり的にアイコンを描く
+- Material Icons / Feather / Heroicons / Lucide 等を同一プロジェクトに混ぜる
+- `fill="#RRGGBB"` を SVG に直書きしてホバー / ダークモードで色変えられなくする
+- 意味の無いアイコン装飾を足す（instyle 抑制ルール）

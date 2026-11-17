@@ -61,6 +61,7 @@
   --corner-shape-hard: superellipse(3.5);  /* squarer, for large panels */
 
   /* ── Typography & motion ──────────────────────────── */
+  /* CDN: gen-interface-jp@0.5.0/all.css — 8 weights (100–800) */
   --font-sans:    'Gen Interface JP', sans-serif;
   --font-display: 'Gen Interface JP Display', 'Gen Interface JP', sans-serif;  /* headings (h1–h4) */
 
