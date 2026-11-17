@@ -310,3 +310,28 @@ box-shadow: inset 0 1px 0 rgba(255,255,255,.85), 0 2px 8px rgba(53,54,45,.06);
 - **HTML 静的サイト**: `<head>` に `<script type="module">` で `esm.sh/budoux@0.7.0` を読み込み、`h1, h2, h3, h4, p, li, td, th, .callout, .lede, blockquote` に `translateHTMLString()` を適用
 - **CSS**: 同じセレクタに `word-break: keep-all; overflow-wrap: anywhere;` を設定
 - **オプトアウト**: 社内 ad-hoc スクリプト・ダッシュボード内部の数値表示など、短文だらけの領域では省略してよい
+
+## ページタイトルと OGP（リンクプレビュー）
+
+公開ページ（Vercel / ConoHa `/html/`・LP・スライド・見積・ダッシュボード）の `<head>` には、`<title>` の直後に次のブロックを **必ず** 入れる。Notion・Slack に URL を貼ったときのリンクプレビューは `og:title` / `og:description` / `og:image` で描画され、無いと何のページか判別できないため。`noindex` と併用してよい。
+
+- `<title>` は `<内容> | <会社・ブランド>`（例: `2027 年度 採用計画 | INSTYLE GROUP`）。`Slides` / `Document` / `index` 等の汎用語・ファイル名のままは禁止
+- `og:title` は `<title>` と同じ文言、`og:description` は `description` と同じ 1 行説明
+- `og:image` の `<CAT>` は配信先サブドメイン（app / cpc / crhr / mb）。`og:url` は公開 URL が決まっていれば入れる
+
+```html
+<title>[タイトル]</title>
+<meta name="description" content="[1 行説明]">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="INSTYLE GROUP">
+<meta property="og:title" content="[タイトル]">
+<meta property="og:description" content="[1 行説明]">
+<meta property="og:url" content="[公開 URL]">
+<meta property="og:image" content="https://<CAT>.instyle.group/_shared/static/ogp.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+```
+
+公開前に `bash ~/Workspace/scripts/check-ogp.sh <file.html | https://...>` で必須タグの有無と `<title>` との一致を確認する。詳細は `~/Workspace/CLAUDE.md` の「ページタイトルと OGP」節を参照。
